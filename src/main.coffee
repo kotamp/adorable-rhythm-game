@@ -27,10 +27,14 @@ flyingCircle =
 
 flyingTime = 2000
 
+flyingSpeed = 100
+
 # flyingAnimation = (x, y, end) ->
 #   Snap.animate([x, y], end, )
 
 inRange = (value) -> Math.random() * 2 * value - value
+randomInRange = (value) -> inRange(value)
+randomPositive = (value) -> Math.random() * value
 
 toCoords = do ->
   innerWidth = width - 2 * margin
@@ -47,19 +51,20 @@ do ->
 
   for i in [0...countW]
     for j in [0...countH]
-      c = toCoords i, j
-      pp = paper.circle c[0], c[1], 0
+      endPosition = toCoords i, j
+      pp = paper.circle endPosition[0], endPosition[1], 0
       .attr appearAttr
       .animate standartAttr, 400, mina.easeout
 
       action = (elem) ->
         elem.animate disappearAttr, 500, mina.easeout
 
-      console.log flyingTime
-      console.log c
-      paper.circle inRange(50) - 50, c[1] + inRange(100), radius
-      .animate {cx: c[0], cy: c[1]}, flyingTime, mina.easeout
-      #.animate {y: c[1]}, flyingTime, mina.easein
+      beginPosition = [endPosition[0] + randomInRange(100), -randomPositive(200)]
+
+      
+
+      shard = paper.circle inRange(50) - 50, c[1] + inRange(100), radius
+      shard.animate {cx: endPosition[0], cy: endPosition[1]}, flyingTime, mina.easeout, ((elem) -> -> elem.remove()) shard
 
       setTimeout action, Math.random() * 1000 + 2000, pp
 
